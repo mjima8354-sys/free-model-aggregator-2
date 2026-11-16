@@ -638,11 +638,12 @@ class AggregatorHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
-        self.send_header("Connection", "keep-alive")
+        self.send_header("Connection", "close")
         if extra_headers:
             for k, v in extra_headers.items():
                 if v:
                     self.send_header(k, v)
+        self.close_connection = True
         self.end_headers()
 
         if json_resp:
@@ -899,9 +900,10 @@ class AggregatorHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
         self.send_header("Cache-Control", "no-cache")
-        self.send_header("Connection", "keep-alive")
+        self.send_header("Connection", "close")
         if upstream_header_val:
             self.send_header("x-makefun-upstream-failures", upstream_header_val)
+        self.close_connection = True
         self.end_headers()
 
         if json_resp:
